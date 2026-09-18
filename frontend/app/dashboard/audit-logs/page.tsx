@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { auditLogsApi } from "@/lib/api";
 import { AuditLog } from "@/lib/types";
-import { SearchInput } from "@/components/ui/SearchInput";
 import { Pagination } from "@/components/ui/Pagination";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -18,7 +17,7 @@ export default function AuditLogsPage() {
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({ action: "", entityType: "", from: "", to: "" });
 
-  const load = (p = page) => {
+  const load = useCallback((p = page) => {
     setLoading(true);
     auditLogsApi.list({
       page: p,
@@ -35,8 +34,10 @@ export default function AuditLogsPage() {
       }
       setLoading(false);
     });
-  };
+  }, [page, filters]);
 
+  // Reset page and reload when filters change
+  // eslint-disable-next-line react-hooks/set-state-in-effect, react-hooks/exhaustive-deps
   useEffect(() => { load(1); setPage(1); }, [filters]);
 
   const handlePageChange = (p: number) => { setPage(p); load(p); };

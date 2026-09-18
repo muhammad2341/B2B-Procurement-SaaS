@@ -21,12 +21,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Initialize auth state from localStorage
   useEffect(() => {
     const stored = localStorage.getItem("token");
     if (stored) {
       try {
         const decoded = jwtDecode<AuthUser>(stored);
-        setToken(stored);
+        setToken(stored); // eslint-disable-line react-hooks/set-state-in-effect
         setUser(decoded);
       } catch {
         localStorage.removeItem("token");

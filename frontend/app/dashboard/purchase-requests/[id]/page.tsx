@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { purchaseRequestsApi } from "@/lib/api";
 import { PurchaseRequest } from "@/lib/types";
@@ -18,14 +18,14 @@ export default function PurchaseRequestDetailPage() {
   const [comment, setComment] = useState("");
   const [actionType, setActionType] = useState<"approve" | "reject" | "cancel" | "submit" | null>(null);
 
-  const load = () => {
+  const load = useCallback(() => {
     purchaseRequestsApi.get(id).then((res) => {
       if (res.success && res.data) setPr(res.data as unknown as PurchaseRequest);
       setLoading(false);
     });
-  };
+  }, [id]);
 
-  useEffect(() => { load(); }, [id]);
+  useEffect(() => { load(); }, [load]);
 
   const doAction = async () => {
     if (!actionType) return;

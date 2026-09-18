@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { productsApi } from "@/lib/api";
 import { Product } from "@/lib/types";
 import { Modal } from "@/components/ui/Modal";
@@ -26,7 +26,7 @@ export default function ProductsPage() {
   const [deleteTarget, setDeleteTarget] = useState<Product | null>(null);
   const [deleting, setDeleting] = useState(false);
 
-  const load = (p = page, s = search) => {
+  const load = useCallback((p = page, s = search) => {
     setLoading(true);
     productsApi.list({ page: p, pageSize: 10, search: s || undefined }).then((res) => {
       if (res.success && res.data) {
@@ -36,8 +36,10 @@ export default function ProductsPage() {
       }
       setLoading(false);
     });
-  };
+  }, [page, search]);
 
+  // Initialize data on mount
+  // eslint-disable-next-line react-hooks/set-state-in-effect, react-hooks/exhaustive-deps
   useEffect(() => { load(1, ""); setPage(1); }, []);
 
   const handleSearch = (val: string) => { setSearch(val); setPage(1); load(1, val); };

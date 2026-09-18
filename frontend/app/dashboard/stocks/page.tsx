@@ -24,10 +24,6 @@ export default function StocksPage() {
     ? stocks
     : stocks.filter((s) => s.warehouseId === selectedWarehouse);
 
-  const lowStockItems = filteredStocks.filter((s) => {
-    // We don't have minimumStock in Stock, but we can flag 0 quantity
-    return s.quantity === 0;
-  });
 
   if (loading) return <LoadingSpinner />;
 

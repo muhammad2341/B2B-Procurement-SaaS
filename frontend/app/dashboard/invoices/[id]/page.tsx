@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { invoicesApi } from "@/lib/api";
 import { Invoice } from "@/lib/types";
@@ -17,14 +17,14 @@ export default function InvoiceDetailPage() {
   const [actionLoading, setActionLoading] = useState(false);
   const [actionType, setActionType] = useState<"pay" | "cancel" | "delete" | null>(null);
 
-  const load = () => {
+  const load = useCallback(() => {
     invoicesApi.get(id).then((res) => {
       if (res.success && res.data) setInvoice(res.data as unknown as Invoice);
       setLoading(false);
     });
-  };
+  }, [id]);
 
-  useEffect(() => { load(); }, [id]);
+  useEffect(() => { load(); }, [load]);
 
   const doAction = async () => {
     if (!actionType) return;

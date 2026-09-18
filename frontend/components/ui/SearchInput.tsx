@@ -7,7 +7,7 @@ interface SearchInputProps {
   debounceMs?: number;
 }
 
-export function SearchInput({ value, onChange, placeholder = "Search...", debounceMs = 300 }: SearchInputProps) {
+export function SearchInput({ value, onChange, placeholder = "Search..." }: SearchInputProps) {
   const handleChange = (val: string) => {
     onChange(val);
   };

@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { goodsReceiptsApi, purchaseOrdersApi, warehousesApi, productsApi } from "@/lib/api";
-import { PurchaseOrder, Warehouse, Product } from "@/lib/types";
+import { goodsReceiptsApi, purchaseOrdersApi, warehousesApi } from "@/lib/api";
+import { PurchaseOrder, Warehouse } from "@/lib/types";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 
 interface ReceiptItem {

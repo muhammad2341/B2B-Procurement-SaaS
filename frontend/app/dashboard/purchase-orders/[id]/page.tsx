@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { purchaseOrdersApi } from "@/lib/api";
 import { PurchaseOrder } from "@/lib/types";
@@ -17,14 +17,14 @@ export default function PurchaseOrderDetailPage() {
   const [actionLoading, setActionLoading] = useState(false);
   const [actionType, setActionType] = useState<"issue" | "cancel" | null>(null);
 
-  const load = () => {
+  const load = useCallback(() => {
     purchaseOrdersApi.get(id).then((res) => {
       if (res.success && res.data) setPo(res.data as unknown as PurchaseOrder);
       setLoading(false);
     });
-  };
+  }, [id]);
 
-  useEffect(() => { load(); }, [id]);
+  useEffect(() => { load(); }, [load]);
 
   const doAction = async () => {
     if (!actionType) return;
