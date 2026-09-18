@@ -1,12 +1,10 @@
-version: "3.9"
-
 services:
   db:
     image: postgres:16-alpine
     environment:
       POSTGRES_DB: procurehub
       POSTGRES_USER: procurehub
-      POSTGRES_PASSWORD: procurehub_prod_secret
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -17,14 +15,12 @@ services:
     restart: unless-stopped
 
   api:
-    build:
-      context: ../..
-      dockerfile: infrastruktur/docker/Dockerfile.backend
+    image: ghcr.io/muhammad2341/procurehub-api:main
     ports:
       - "5000:5000"
     environment:
-      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=procurehub;Username=procurehub;Password=procurehub_prod_secret
-      - Jwt__Secret=${JWT_SECRET:-procurehub_production_jwt_key_change_me_32chars}
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=procurehub;Username=procurehub;Password=${POSTGRES_PASSWORD}
+      - Jwt__Secret=${JWT_SECRET:?Set JWT_SECRET in .env}
       - Jwt__Issuer=procurehub-api
       - Jwt__Audience=procurehub-client
       - ASPNETCORE_ENVIRONMENT=Production
@@ -34,13 +30,11 @@ services:
     restart: unless-stopped
 
   web:
-    build:
-      context: ../..
-      dockerfile: infrastruktur/docker/Dockerfile.frontend
+    image: ghcr.io/muhammad2341/procurehub-web:main
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:5000
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:5000}
     depends_on:
       - api
     restart: unless-stopped
