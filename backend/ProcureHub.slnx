@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="ProcureHub.Api/ProcureHub.Api.csproj" />
+  <Project Path="ProcureHub.Application/ProcureHub.Application.csproj" />
+  <Project Path="ProcureHub.Domain/ProcureHub.Domain.csproj" />
+  <Project Path="ProcureHub.Infrastructure/ProcureHub.Infrastructure.csproj" />
+</Solution>

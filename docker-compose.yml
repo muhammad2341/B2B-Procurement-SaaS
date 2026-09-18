@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: procurehub-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: procurehub
+      POSTGRES_USER: procurehub
+      POSTGRES_PASSWORD: procurehub_dev
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf
+
+volumes:
+  postgres_data:

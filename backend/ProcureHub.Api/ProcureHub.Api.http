@@ -1,0 +1,6 @@
+@ProcureHub.Api_HostAddress = http://localhost:5091
+
+GET {{ProcureHub.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

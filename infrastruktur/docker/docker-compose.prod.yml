@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: procurehub
+      POSTGRES_USER: procurehub
+      POSTGRES_PASSWORD: procurehub_prod_secret
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U procurehub -d procurehub"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ../..
+      dockerfile: infrastruktur/docker/Dockerfile.backend
+    ports:
+      - "5000:5000"
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=procurehub;Username=procurehub;Password=procurehub_prod_secret
+      - Jwt__Secret=${JWT_SECRET:-procurehub_production_jwt_key_change_me_32chars}
+      - Jwt__Issuer=procurehub-api
+      - Jwt__Audience=procurehub-client
+      - ASPNETCORE_ENVIRONMENT=Production
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ../..
+      dockerfile: infrastruktur/docker/Dockerfile.frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:5000
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  pgdata:
