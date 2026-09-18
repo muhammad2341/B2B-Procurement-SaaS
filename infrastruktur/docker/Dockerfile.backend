@@ -13,7 +13,7 @@ RUN dotnet publish backend/ProcureHub.Api/ProcureHub.Api.csproj -c Release -o /a
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
 
-RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser
+RUN groupadd --system appgroup && useradd --system --ingroup appgroup appuser
 COPY --from=build /app/publish .
 RUN chown -R appuser:appgroup /app
 USER appuser
