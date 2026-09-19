@@ -85,6 +85,13 @@ builder.Services.AddCors(options =>
 // ─── Build ───────────────────────────────────────────────────────────────────
 var app = builder.Build();
 
+// ─── Auto Migrate ────────────────────────────────────────────────────────────
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ProcureHubDbContext>();
+    db.Database.Migrate();
+}
+
 // ─── Pipeline ────────────────────────────────────────────────────────────────
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
