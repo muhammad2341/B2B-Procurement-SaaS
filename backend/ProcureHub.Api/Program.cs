@@ -77,6 +77,7 @@ builder.Services.AddCors(options =>
         policy.SetIsOriginAllowed(origin =>
                 origin == "http://localhost:3000" ||
                 origin == "http://localhost:3001" ||
+                origin == "http://faridpens.my.id" ||
                 origin.Contains("localhost"))
               .AllowAnyHeader()
               .AllowAnyMethod());
