@@ -3,7 +3,7 @@
 import { useAuth } from "@/lib/auth-context";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 interface NavItem {
   href: string;
@@ -30,6 +30,7 @@ const NAV_ITEMS: NavItem[] = [
 function DashboardNav() {
   const { user, logout } = useAuth();
   const pathname = usePathname();
+  const router = useRouter();
   const visibleItems = NAV_ITEMS.filter((item) => user && item.roles.includes(user.role));
 
   const groups = visibleItems.reduce<Record<string, NavItem[]>>((acc, item) => {
@@ -76,7 +77,7 @@ function DashboardNav() {
       </nav>
       <div className="p-3 border-t border-gray-800">
         <button
-          onClick={logout}
+          onClick={() => { logout(); router.push("/"); }}
           className="w-full text-sm text-gray-400 hover:text-white text-left px-3 py-2 rounded-lg hover:bg-gray-800 transition"
         >
           Sign out

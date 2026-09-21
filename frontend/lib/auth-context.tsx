@@ -29,6 +29,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const decoded = jwtDecode<AuthUser>(stored);
         setToken(stored); // eslint-disable-line react-hooks/set-state-in-effect
         setUser(decoded);
+        document.cookie = `token=${stored}; path=/; SameSite=Lax`;
       } catch {
         localStorage.removeItem("token");
       }
@@ -41,6 +42,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (res.success && res.data?.token) {
       const decoded = jwtDecode<AuthUser>(res.data.token);
       localStorage.setItem("token", res.data.token);
+      document.cookie = `token=${res.data.token}; path=/; SameSite=Lax`;
       setToken(res.data.token);
       setUser(decoded);
       return { success: true, message: "Login successful" };
@@ -55,6 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     localStorage.removeItem("token");
+    document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     setToken(null);
     setUser(null);
   };

@@ -2,28 +2,9 @@
 
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 export default function HomePage() {
-  const { user, isLoading } = useAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!isLoading && user) {
-      router.replace("/dashboard");
-    }
-  }, [user, isLoading, router]);
-
-  if (isLoading) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <span className="text-gray-500 text-sm">Loading…</span>
-      </div>
-    );
-  }
-
-  if (user) return null;
+  const { user } = useAuth();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50">
@@ -31,18 +12,29 @@ export default function HomePage() {
       <nav className="flex items-center justify-between px-8 py-4 max-w-7xl mx-auto">
         <div className="text-2xl font-bold text-blue-600">ProcureHub</div>
         <div className="flex items-center gap-4">
-          <Link
-            href="/login"
-            className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
-          >
-            Sign In
-          </Link>
-          <Link
-            href="/register"
-            className="text-sm font-medium bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Get Started
-          </Link>
+          {user ? (
+            <Link
+              href="/dashboard"
+              className="text-sm font-medium bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Dashboard
+            </Link>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/register"
+                className="text-sm font-medium bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Get Started
+              </Link>
+            </>
+          )}
         </div>
       </nav>
 
