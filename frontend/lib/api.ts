@@ -49,7 +49,18 @@ async function request<T>(
     };
   }
 
-  return { success: true, message: "OK", data: body };
+  // Backend returns { success, message, data } – use it directly when present,
+  // otherwise wrap raw body for endpoints that return plain arrays/objects.
+  if (body && typeof body === "object" && "success" in body) {
+    return {
+      success: body.success,
+      message: body.message ?? "OK",
+      data: body.data as T,
+      errors: body.errors,
+    };
+  }
+
+  return { success: true, message: "OK", data: body as T };
 }
 
 // ─── Auth ───────────────────────────────────────────────────────────────────
